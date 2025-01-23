@@ -42,25 +42,25 @@
                     @endphp
                   @if ($dataUsers->id == auth()->user()->id)
                   <tr>
-                      <th style="background-color: #d7d3ef" scope="row">
-                          @if ($loop->iteration == 1)
-                          {{ $loop->iteration }}.  &nbsp;
-                              <img src="{{ asset('path/to/gold-icon.png') }}" alt="Gold"
-                                  style="width: 20px;"> <!-- Ikon emas -->
-                          @elseif ($loop->iteration == 2)
-                          {{ $loop->iteration }}.  &nbsp;
+                    <th style="background-color: #d7d3ef" scope="row">
+                        @if ($loop->iteration == 1)
+                        {{ $loop->iteration }}.&nbsp;
+                            <img src="{{ asset('images/gold.png') }}" alt="Gold"
+                                style="width: 20px;"> <!-- Ikon emas -->
+                        @elseif ($loop->iteration == 2)
+                        {{ $loop->iteration }}.&nbsp;
 
-                              <img src="{{ asset('path/to/silver-icon.png') }}" alt="Silver"
-                                  style="width: 20px;"> <!-- Ikon perak -->
-                          @elseif ($loop->iteration == 3)
-                          {{ $loop->iteration }}.  &nbsp;
+                            <img src="{{ asset('images/silver.png') }}" alt="Silver"
+                                style="width: 20px;"> <!-- Ikon perak -->
+                        @elseif ($loop->iteration == 3)
+                        {{ $loop->iteration }}.&nbsp;
 
-                              <img src="{{ asset('path/to/bronze-icon.png') }}" alt="Bronze"
-                                  style="width: 20px;"> <!-- Ikon perunggu -->
-                          @else
-                              {{ $loop->iteration }}
-                          @endif
-                      </th>
+                            <img src="{{ asset('images/bronze.png') }}" alt="Bronze"
+                                style="width: 20px;"> <!-- Ikon perunggu -->
+                        @else
+                            {{ $loop->iteration }}
+                        @endif
+                    </th>
                       <td style="background-color: #d7d3ef">{{ $dataUsers->name }}</td>
                       <td style="background-color: #d7d3ef"><b>[{{ $daysAgo }}]</b> days ago</td>
                       <!-- Menampilkan selisih hari -->
