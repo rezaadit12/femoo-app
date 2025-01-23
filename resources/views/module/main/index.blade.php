@@ -82,10 +82,9 @@
                             <i class="fas fa-user-circle fa-2x ms-2"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editUser">Edit</a></li>
                             <li><a class="dropdown-item" href="{{ url('/logout') }}">Logout</a></li>
-                            <li><a class="dropdown-item" data-bs-toggle="modal"
-                            data-bs-target="#editUser">Edit</a></li>
+
                         </ul>
                     </div>
 
@@ -98,13 +97,15 @@
                 <div id="day" class="day">0d</div>
                 <h1 id="clock" class="clock">00:00:00</h1>
                 @if ($thisUser->lastRelapsed == null)
-                    <a id="restartButton" class="btn btn-primary rounded-circle position-absolute" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal" style="width: 50px; height: 50px; right: 27px; bottom: 10px;">
+                    <a id="restartButton" class="btn btn-primary rounded-circle position-absolute"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        style="width: 50px; height: 50px; right: 27px; bottom: 10px;">
                         <p class="ms-1 fs-5" style="margin-top: 1.4px;">▷</p>
                     </a>
                 @else
-                    <a id="restartButton" class="btn btn-primary rounded-circle position-absolute" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal" style="width: 50px; height: 50px; right: 27px; bottom: 10px;">
+                    <a id="restartButton" class="btn btn-primary rounded-circle position-absolute"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        style="width: 50px; height: 50px; right: 27px; bottom: 10px;">
                         <p class="ms-1 fs-5" style="margin-top: 1.4px;">↺</p>
                     </a>
                 @endif
@@ -112,7 +113,8 @@
         </div>
         <div class="table mt-4">
             <a href="{{ route('rank') }}" class="btn mb-2" style="background-color: #55AD9B; color: white;">My Rank</a>
-            <a href="{{ route('history') }}" class="btn mb-2" style="background-color: white; color: #55AD9B;">History</a>
+            <a href="{{ route('history') }}" class="btn mb-2"
+                style="background-color: white; color: #55AD9B;">History</a>
             <!-- <a href="" class="btn btn-warning mb-2">asdfs</a> -->
             <table class="table table-bordered table-hover">
                 <thead>
@@ -131,7 +133,7 @@
                                 $daysAgo = $lastRelapsed->diffInDays(Carbon::now()); // Selisih dalam hari penuh
                                 $daysAgo = floor($daysAgo);
                                 Carbon::setLocale('id');
-                                $formattedDate = $lastRelapsed->translatedFormat('j F Y');  // Format: 1 Februari 2024
+                                $formattedDate = $lastRelapsed->translatedFormat('j F Y'); // Format: 1 Februari 2024
                             } else {
                                 $daysAgo = '0';
                                 $formattedDate = '-';
@@ -140,20 +142,57 @@
                         @endphp
                         @if ($dataUsers->id == auth()->user()->id)
                             <tr>
-                                <th style="background-color: #d7d3ef" scope="row">{{ $loop->iteration }}</th>
+                                <th style="background-color: #d7d3ef" scope="row">
+                                    @if ($loop->iteration == 1)
+                                    {{ $loop->iteration }}.&nbsp;
+                                        <img src="{{ asset('path/to/gold-icon.png') }}" alt="Gold"
+                                            style="width: 20px;"> <!-- Ikon emas -->
+                                    @elseif ($loop->iteration == 2)
+                                    {{ $loop->iteration }}.&nbsp;
+
+                                        <img src="{{ asset('path/to/silver-icon.png') }}" alt="Silver"
+                                            style="width: 20px;"> <!-- Ikon perak -->
+                                    @elseif ($loop->iteration == 3)
+                                    {{ $loop->iteration }}.&nbsp;
+
+                                        <img src="{{ asset('path/to/bronze-icon.png') }}" alt="Bronze"
+                                            style="width: 20px;"> <!-- Ikon perunggu -->
+                                    @else
+                                        {{ $loop->iteration }}
+                                    @endif
+                                </th>
                                 <td style="background-color: #d7d3ef">{{ $dataUsers->name }}</td>
-                                <td style="background-color: #d7d3ef"><b>({{ $daysAgo }}) </b> days ago</td> <!-- Menampilkan selisih hari -->
-                                <td style="background-color: #d7d3ef">{{ $formattedDate }}</td> <!-- Menampilkan lastRelapsed -->
+                                <td style="background-color: #d7d3ef"><b>[{{ $daysAgo }}]</b> days ago</td>
+                                <!-- Menampilkan selisih hari -->
+                                <td style="background-color: #d7d3ef">{{ $formattedDate }}</td>
+                                <!-- Menampilkan lastRelapsed -->
                             </tr>
                         @else
                             <tr>
-                                <th scope="row">{{ $loop->iteration }}</th>
+                                <th scope="row">
+                                    @if ($loop->iteration == 1)
+                                    {{ $loop->iteration }}.&nbsp;
+                                        <img src="{{ asset('images/gold.png') }}" alt="Gold"
+                                            style="width: 20px;"> <!-- Ikon emas -->
+                                    @elseif ($loop->iteration == 2)
+                                    {{ $loop->iteration }}.&nbsp;
+
+                                        <img src="{{ asset('images/silver.png') }}" alt="Silver"
+                                            style="width: 20px;"> <!-- Ikon perak -->
+                                    @elseif ($loop->iteration == 3)
+                                    {{ $loop->iteration }}.&nbsp;
+
+                                        <img src="{{ asset('images/bronze.png') }}" alt="Bronze"
+                                            style="width: 20px;"> <!-- Ikon perunggu -->
+                                    @else
+                                        {{ $loop->iteration }}
+                                    @endif
+                                </th>
                                 <td>{{ $dataUsers->name }}</td>
-                                <td><b>({{ $daysAgo }}) </b> days ago</td> <!-- Menampilkan selisih hari -->
+                                <td><b>[{{ $daysAgo }}]</b> days ago</td> <!-- Menampilkan selisih hari -->
                                 <td>{{ $formattedDate }}</td> <!-- Menampilkan lastRelapsed -->
                             </tr>
                         @endif
-
                     @endforeach
                 </tbody>
             </table>
@@ -163,12 +202,13 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-               <form action="{{ route('relapsed') }}" method="post">
-                @csrf
+                <form action="{{ route('relapsed') }}" method="post">
+                    @csrf
                     @if ($thisUser->lastRelapsed !== null)
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">Why did it happen?</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <textarea class="form-control" placeholder="tell me here!" name="reason" id="floatingTextarea"></textarea>
@@ -180,31 +220,35 @@
                     @else
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">Get ready for the challenge!</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Start</button>
                         </div>
                     @endif
-               </form>
+                </form>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+    <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUserLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form action="{{ route('edit-user') }}" method="post">
-                @csrf
+                    @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="editUserLabel">Edit User</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="name" class="col-form-label">Username:</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ $thisUser->name }}" required>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ $thisUser->name }}" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -226,7 +270,7 @@
     let startDate = 0;
 
     if (thisUser['lastRelapsed'] !== null) {
-        startDate = new Date(thisUser['lastRelapsed']).getTime() +  (7 * 3600000);
+        startDate = new Date(thisUser['lastRelapsed']).getTime() + (7 * 3600000);
     }
 
     function startClock() {
@@ -235,7 +279,7 @@
 
     function updateClock() {
         const currentTime = Date.now();
-        elapsedTime = currentTime - startDate ;
+        elapsedTime = currentTime - startDate;
         const formattedTime = formatTime(elapsedTime);
         console.log(formattedTime);
         document.getElementById('clock').innerText = formattedTime;

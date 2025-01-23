@@ -14,7 +14,7 @@ class mainController extends Controller
     {
 
         $thisUser = Auth::user();
-        $rankUser = User::orderBy('updated_at', 'asc')->take(10)->get();
+        $rankUser = User::whereNotNull('lastRelapsed')->orderBy('lastRelapsed', 'ASC')->take(10)->get();
 
         return view('module.main.index', compact('thisUser', 'rankUser'));
         // dd($thisUser);
@@ -23,7 +23,7 @@ class mainController extends Controller
     public function rank()
     {
         $thisUser = Auth::user();
-        $rankUser = User::orderBy('updated_at', 'asc')->get(); // limit 10
+        $rankUser = User::whereNotNull('lastRelapsed')->orderBy('lastRelapsed', 'ASC')->get(); // limit 10
 
         return view('module.main.rank', compact('thisUser', 'rankUser'));
 
