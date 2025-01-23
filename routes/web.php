@@ -18,8 +18,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/rank', [mainController::class, 'rank'])->name('rank');
     Route::get('/history', [mainController::class, 'history'])->name('history');
     Route::post('/relapsed', [mainController::class, 'relapsed'])->name('relapsed');
-
-
+    Route::post('/edit-user', [mainController::class, 'editUser'])->name('edit-user');
 
 });
 

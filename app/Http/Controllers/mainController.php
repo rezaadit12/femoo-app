@@ -6,6 +6,7 @@ use App\Models\M_history;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 
 class mainController extends Controller
 {
@@ -52,9 +53,18 @@ class mainController extends Controller
 
         User::where('id', $idUser)
         ->update([
-            'lastRelapsed' => now(),
+            'lastRelapsed' => Date::now(),
         ]);
 
+        return back();
+    }
+
+    public function editUser(Request $request){
+        $idUser = Auth::user()->id;
+        User::where('id', $idUser)
+        ->update([
+            'name' => $request->name,
+        ]);
         return back();
     }
 }

@@ -8,7 +8,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Font Awesome for user icon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <title>TrackerDay | -</title>
+    <title>TrackerDay | {{ $thisUser['name'] }}</title>
     <style>
         body {
             display: flex;
@@ -84,6 +84,8 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
 
                             <li><a class="dropdown-item" href="{{ url('/logout') }}">Logout</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal"
+                            data-bs-target="#editUser">Edit</a></li>
                         </ul>
                     </div>
 
@@ -95,10 +97,17 @@
                 <div class="title">I Promise You!</div>
                 <div id="day" class="day">0d</div>
                 <h1 id="clock" class="clock">00:00:00</h1>
-                <a id="restartButton" class="btn btn-primary rounded-circle position-absolute" data-bs-toggle="modal"
-                    data-bs-target="#exampleModal" style="width: 50px; height: 50px; right: 27px; bottom: 10px;">
-                    <p class="ms-1 fs-5" style="margin-top: 1.4px;">↺</p>
-                </a>
+                @if ($thisUser->lastRelapsed == null)
+                    <a id="restartButton" class="btn btn-primary rounded-circle position-absolute" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal" style="width: 50px; height: 50px; right: 27px; bottom: 10px;">
+                        <p class="ms-1 fs-5" style="margin-top: 1.4px;">▷</p>
+                    </a>
+                @else
+                    <a id="restartButton" class="btn btn-primary rounded-circle position-absolute" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal" style="width: 50px; height: 50px; right: 27px; bottom: 10px;">
+                        <p class="ms-1 fs-5" style="margin-top: 1.4px;">↺</p>
+                    </a>
+                @endif
             </div>
         </div>
         <div class="table mt-4">
@@ -116,9 +125,7 @@
                 </thead>
                 <tbody>
                     @foreach ($rankUser as $dataUsers)
-
                         @php
-
                             if ($dataUsers->lastRelapsed) {
                                 $lastRelapsed = Carbon::parse($dataUsers->lastRelapsed);
                                 $daysAgo = $lastRelapsed->diffInDays(Carbon::now()); // Selisih dalam hari penuh
@@ -158,18 +165,53 @@
             <div class="modal-content">
                <form action="{{ route('relapsed') }}" method="post">
                 @csrf
+                    @if ($thisUser->lastRelapsed !== null)
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Why did it happen?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea class="form-control" placeholder="tell me here!" name="reason" id="floatingTextarea"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Relapsed</button>
+                        </div>
+                    @else
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Get ready for the challenge!</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Start</button>
+                        </div>
+                    @endif
+               </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="{{ route('edit-user') }}" method="post">
+                @csrf
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Why did it happen?</h1>
+                        <h5 class="modal-title" id="editUserLabel">Edit User</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <textarea class="form-control" placeholder="tell me here!" name="reason" id="floatingTextarea"></textarea>
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">Username:</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $thisUser->name }}" required>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Relapsed</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send</button>
                     </div>
-               </form>
+                </form>
             </div>
         </div>
     </div>
@@ -180,14 +222,12 @@
 <script>
     let timer;
     let elapsedTime = 0;
+    let thisUser = {!! json_encode($thisUser) !!}
+    let startDate = 0;
 
-    // sorry this is hardcoded style
-    const date = '{{ $date }}'; // Mengambil tanggal
-    const month = '{{ $month }}'; // Mengambil bulan
-    const year = '{{ $year }}'; // Mengambil tahun
-    const t_start = `${year}-${month}-${date}`;
-
-    const startDate = new Date(`${t_start}T00:00:00`).getTime();
+    if (thisUser['lastRelapsed'] !== null) {
+        startDate = new Date(thisUser['lastRelapsed']).getTime() +  (7 * 3600000);
+    }
 
     function startClock() {
         timer = setInterval(updateClock, 1000);
@@ -195,8 +235,9 @@
 
     function updateClock() {
         const currentTime = Date.now();
-        elapsedTime = currentTime - startDate;
+        elapsedTime = currentTime - startDate ;
         const formattedTime = formatTime(elapsedTime);
+        console.log(formattedTime);
         document.getElementById('clock').innerText = formattedTime;
 
         const days = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
@@ -214,8 +255,9 @@
     function pad(num) {
         return num.toString().padStart(2, '0');
     }
-
-    window.onload = startClock;
+    if (thisUser['lastRelapsed'] !== null) {
+        window.onload = startClock;
+    }
 </script>
 
 </html>
